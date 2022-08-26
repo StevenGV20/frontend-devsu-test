@@ -1,0 +1,31 @@
+.table-container {
+  width: 100%;
+  border-collapse: collapse;
+  border: #bdbdbd solid 1px;
+  margin-top: 2%;
+  margin-right: 5%;
+}
+
+.table-head {
+  border: #bdbdbd solid 1px;
+}
+.table-body {
+  border: #bdbdbd solid 1px;
+}
+.table-head th,
+.table-body td {
+  padding: 1em;
+  text-align: center;
+}
+.table-body button {
+  padding: 1em;
+  border: none;
+  background: none;
+}
+.table-icon-edit {
+  color: blue;
+}
+
+.table-icon-delete {
+  color: red;
+}

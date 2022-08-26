@@ -1,0 +1,28 @@
+.btn {
+  padding: 1em 70px;
+  border-radius: 0.25em;
+}
+.btn-primary {
+  background-color: #edc034;
+  border: none;
+}
+.btn-secondary {
+  background-color: white;
+  border: #bdbdbd 1px solid;
+}
+.btn-new {
+  position: absolute;
+  right: 0;
+  margin-right: 2%;
+}
+
+.crud-container {
+  padding: 2em;
+}
+
+.crud-container .input-search {
+  padding: 1em;
+  border: 1px solid #bdbdbd;
+  width: 30vh;
+  left: 0;
+}

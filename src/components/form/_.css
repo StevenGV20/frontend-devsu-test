@@ -1,0 +1,39 @@
+.form-container {
+  padding: 1em;
+}
+.form-container form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  grid-column: span 1 / span 1;
+  margin-bottom: 1em;
+}
+.form-group + .form-group {
+  margin-right: 0.25rem;
+}
+.form-group > * + * {
+  margin-top: 0.5em;
+}
+.form-group > label {
+  width: 100%;
+}
+.form-error {
+  width: 100%;
+  color: red;
+  font-size: 12px;
+}
+.form-input {
+  padding: 1em;
+  border: 1px solid #bdbdbd;
+  width: 90%;
+  left: 0;
+}
+.form-input-error {
+  border: red 1px solid;
+}
+.form-button {
+  margin: auto 3em auto 2em;
+}

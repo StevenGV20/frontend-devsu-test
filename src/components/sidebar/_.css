@@ -1,0 +1,21 @@
+.sidebar-container {
+  height: 100vh;
+  //position: fixed;
+  border-right: #bdbdbd solid 1px;
+  grid-column: span 2 / span 2;
+}
+
+.sidebar-container ul {
+  list-style: none;
+  color: black;
+}
+
+.sidebar-container .item-menu {
+  padding: 1em;
+  border-bottom: 1px solid #bdbdbd;
+}
+
+.sidebar-container .item-menu a {
+  text-decoration: none;
+  color: black;
+}

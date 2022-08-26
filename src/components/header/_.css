@@ -1,0 +1,9 @@
+header {
+  border-bottom: #bdbdbd solid 1px;
+  width: 100%;
+  grid-column: span 12 / span 12;
+}
+header img {
+  width: 150px;
+  padding: 1em;
+}
