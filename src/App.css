@@ -9,3 +9,17 @@
   width: 100%;
   text-align: left;
 }
+.input-search {
+  padding: 1em;
+  border: 1px solid #bdbdbd;
+  width: 30vh;
+  left: 0;
+}
+.form-error {
+  width: 100%;
+  color: red;
+  font-size: 12px;
+}
+.form-input-error {
+  border: red 1px solid;
+}

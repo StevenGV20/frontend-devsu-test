@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export const getClientes = async () => {
+export const getMovimientos = async () => {
   try {
     const data = await axios
       .get(
-        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_CLIENTES}/`
+        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_MOVIMIENTOS}/`
       )
       .then((json) => {
         return json.data;
@@ -15,15 +15,14 @@ export const getClientes = async () => {
   }
 };
 
-export const postCliente = async (cliente) => {
+export const postMovimiento = async (movimiento) => {
   try {
     await axios
       .post(
-        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_CLIENTES}/`,
-        cliente
+        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_MOVIMIENTOS}/`,
+        movimiento
       )
       .then((res) => {
-        console.log(res.data);
         return res.data;
       })
       .catch((error) => {
@@ -34,19 +33,17 @@ export const postCliente = async (cliente) => {
   }
 };
 
-export const updateCliente = async (id, cliente) => {
+export const updateMovimiento = async (id, movimiento) => {
   try {
     await axios
       .post(
-        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_CLIENTES}/update?id=${id}`,
-        cliente
+        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_MOVIMIENTOS}/update?id=${id}`,
+        movimiento
       )
       .then(async (res) => {
-        console.log(res.data);
         return await res.data;
       })
       .catch(async (error) => {
-        console.log(error);
         return await error.response;
       });
   } catch (error) {
@@ -54,14 +51,13 @@ export const updateCliente = async (id, cliente) => {
   }
 };
 
-export const deleteCliente = async (id) => {
+export const deleteMovimiento = async (id) => {
   try {
     await axios
       .delete(
-        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_CLIENTES}/delete?id=${id}`
+        `${process.env.REACT_APP_HOST_API}${process.env.REACT_APP_API_MOVIMIENTOS}/delete?id=${id}`
       )
       .then((res) => {
-        console.log(res.data);
         return res.data;
       })
       .catch((error) => {

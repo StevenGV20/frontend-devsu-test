@@ -29,28 +29,25 @@ export default function ClientesForm({
     initialValues: initialValues,
     validate: validateFormClientes,
     onSubmit: (values) => {
-      try {
-        const response = postCliente(values);
-        if (response != null) {
+      postCliente(values)
+        .then(() => {
           formik.setValues({});
-          formik.setValues({});
+          formik.handleReset();
           setClienteSelected({});
           openModal();
           setRefreshList((prev) => !prev);
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
+        })
+        .catch((err) => {
+          console.log("error", err.data.detail);
+          if (err.data.detail.includes("identificacion_UNIQUE")) {
+            formik.setErrors({
+              ...formik.errors,
+              identificacion: "Ya existe esta identificacion",
+            });
+          }
+        });
     },
   });
-
-  useEffect(() => {
-    (async () => {
-      if (Object.entries(clienteSelected).length > 0) {
-        await formik.setValues(clienteSelected);
-      }
-    })();
-  }, [clienteSelected]);
 
   const handleSave = (e) => {
     if (e) {
@@ -70,6 +67,15 @@ export default function ClientesForm({
     setClienteSelected({});
     openModal();
   };
+
+  useEffect(() => {
+    (async () => {
+      if (Object.entries(clienteSelected).length > 0) {
+        console.log(initialValues);
+        await formik.setValues(initialValues);
+      }
+    })();
+  }, [clienteSelected]);
 
   return (
     <div className="form-container">
@@ -235,16 +241,18 @@ export default function ClientesForm({
           value={formik.values.idpersona}
           onChange={formik.handleChange}
         />
-        <button className="btn btn-secondary form-button" onClick={onCancel}>
-          Cancelar
-        </button>
-        <button
-          className="btn btn-primary form-button"
-          type="button"
-          onClick={(e) => handleSave(e)}
-        >
-          Guardar
-        </button>
+        <div className="form-container-buttons">
+          <button className="btn btn-secondary form-button" onClick={onCancel}>
+            Cancelar
+          </button>
+          <button
+            className="btn btn-primary form-button"
+            type="button"
+            onClick={(e) => handleSave(e)}
+          >
+            Guardar
+          </button>
+        </div>
       </form>
     </div>
   );

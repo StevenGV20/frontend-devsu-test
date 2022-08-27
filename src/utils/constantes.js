@@ -5,4 +5,4 @@ export const estados = [
 ];
 export const tipo_cuenta = ["Ahorro", "Corriente"];
 export const valor_movimiento = ["Credito", "Debito"];
-export const tipo_movimiento = ["Retiro", "Debito"];
+export const tipo_movimiento = ["Retiro", "Deposito"];

@@ -1,22 +1,59 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import "./_.css";
 import { validateFormCuentas } from "../../utils/validateForms";
 import { estados, tipo_cuenta } from "../../utils/constantes";
+import { postCuenta, updateCuenta } from "../../api/cuentas";
 
-export default function CuentasForm({ title, openModal, cliente, setCliente }) {
+export default function CuentasForm({
+  title,
+  openModal,
+  clienteSelected,
+  cuentaSelected,
+  setCuentaSelected,
+  setClienteSelected,
+  setRefreshList,
+}) {
+  const initialValues = {
+    idpersona: clienteSelected?.idpersona || "",
+    nombres: clienteSelected?.nombres || "",
+    identificacion: clienteSelected?.identificacion || "",
+    numeroCuenta: cuentaSelected?.numeroCuenta || "",
+    tipoCuenta: cuentaSelected?.tipoCuenta || "",
+    saldoInicial: cuentaSelected?.saldoInicial || "",
+    saldoDisponible: cuentaSelected?.saldoDisponible || "",
+    estado: cuentaSelected?.estado || "",
+    idcuenta: cuentaSelected?.idcuenta || "",
+  };
+
   const formik = useFormik({
-    initialValues: {
-      clienteid: cliente,
-      numeroCuenta: "",
-      tipoCuenta: "",
-      saldoInicial: "",
-      estado: "",
-    },
+    initialValues: initialValues,
     validate: validateFormCuentas,
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
-      openModal();
+      console.log("into handle");
+      console.log("newObj", values);
+      postCuenta(values)
+        .then(() => {
+          formik.setValues({});
+          formik.handleReset();
+          setClienteSelected({});
+          setCuentaSelected({});
+          openModal();
+          setRefreshList((prev) => !prev);
+        })
+        .catch((err) => {
+          if (err.data.detail.includes("numero_cuenta_UNIQUE")) {
+            formik.setErrors({
+              ...formik.errors,
+              numeroCuenta: "Ya existe cuenta registrada con en este numero",
+            });
+          } else if (err.data.detail) {
+            formik.setErrors({
+              ...formik.errors,
+              numeroCuenta: err.data.detail,
+            });
+          }
+        });
     },
   });
 
@@ -24,6 +61,11 @@ export default function CuentasForm({ title, openModal, cliente, setCliente }) {
     if (e) {
       e.preventDefault();
     }
+    console.log("clciked");
+    formik.setValues({
+      ...formik.values,
+      cliente: { idpersona: formik.values.idpersona },
+    });
     formik.handleSubmit();
   };
 
@@ -33,15 +75,52 @@ export default function CuentasForm({ title, openModal, cliente, setCliente }) {
     }
     formik.setErrors({});
     openModal();
-    setCliente("");
+    setClienteSelected({});
+    setCuentaSelected({});
   };
+
+  useEffect(() => {
+    (async () => {
+      if (Object.entries(clienteSelected).length > 0) {
+        await formik.setValues(initialValues);
+      }
+    })();
+  }, [clienteSelected]);
 
   return (
     <div className="form-container">
       <h1>{title}</h1>
       <form className="">
+        <input
+          hidden
+          name="idpersona"
+          value={formik.values.idpersona}
+          onChange={formik.handleChange}
+        />
+        <div className="form-group">
+          <label>ID del Cliente</label>
+          <input
+            name="identificacion"
+            disabled
+            className="form-input"
+            value={formik.values.identificacion}
+            onChange={formik.handleChange}
+            onBlur={() => formik.setFieldTouched("identificacion")}
+          />
+        </div>
         <div className="form-group">
           <label>Cliente</label>
+          <input
+            name="nombres"
+            disabled
+            className="form-input"
+            value={formik.values.nombres}
+            onChange={formik.handleChange}
+            onBlur={() => formik.setFieldTouched("nombres")}
+          />
+        </div>
+        <div className="form-group">
+          <label>Numero Cuenta</label>
           {formik.touched.numeroCuenta && formik.errors.numeroCuenta ? (
             <div className="form-error">{formik.errors.numeroCuenta}</div>
           ) : null}
@@ -80,13 +159,14 @@ export default function CuentasForm({ title, openModal, cliente, setCliente }) {
           </select>
         </div>
         <div className="form-group">
-          <label>Saldo inicial</label>
+          <label>Saldo Inicial</label>
           {formik.touched.saldoInicial && formik.errors.saldoInicial ? (
             <div className="form-error">{formik.errors.saldoInicial}</div>
           ) : null}
           <input
             name="saldoInicial"
             value={formik.values.saldoInicial}
+            disabled={formik.values.idcuenta && "disabled"}
             className={`form-input ${
               formik.touched.saldoInicial && formik.errors.saldoInicial
                 ? "form-input-error"
@@ -96,6 +176,26 @@ export default function CuentasForm({ title, openModal, cliente, setCliente }) {
             onBlur={() => formik.setFieldTouched("saldoInicial")}
           />
         </div>
+        {formik.values.idcuenta && (
+          <div className="form-group">
+            <label>Saldo Disponible</label>
+            {formik.touched.saldoDisponible && formik.errors.saldoDisponible ? (
+              <div className="form-error">{formik.errors.saldoDisponible}</div>
+            ) : null}
+            <input
+              name="saldoDisponible"
+              value={formik.values.saldoDisponible}
+              className={`form-input ${
+                formik.touched.saldoDisponible && formik.errors.saldoDisponible
+                  ? "form-input-error"
+                  : ""
+              }`}
+              onChange={formik.handleChange}
+              onBlur={() => formik.setFieldTouched("saldoDisponible")}
+            />
+          </div>
+        )}
+
         <div className="form-group">
           <label>Estado</label>
           {formik.touched.estado && formik.errors.estado ? (
@@ -110,7 +210,7 @@ export default function CuentasForm({ title, openModal, cliente, setCliente }) {
             onChange={formik.handleChange}
             onBlur={() => formik.setFieldTouched("estado")}
           >
-            <option value={null}>[ Seleccione ]</option>
+            <option value="">[ Seleccione ]</option>
             {estados.map((state) => (
               <option key={state.name} value={state.value}>
                 {state.name}
@@ -118,16 +218,18 @@ export default function CuentasForm({ title, openModal, cliente, setCliente }) {
             ))}
           </select>
         </div>
-        <button className="btn btn-secondary form-button" onClick={onCancel}>
-          Cancelar
-        </button>
-        <button
-          className="btn btn-primary form-button"
-          type="button"
-          onClick={handleSave}
-        >
-          Guardar
-        </button>
+        <div className="form-container-buttons">
+          <button className="btn btn-secondary form-button" onClick={onCancel}>
+            Cancelar
+          </button>
+          <button
+            className="btn btn-primary form-button"
+            type="button"
+            onClick={handleSave}
+          >
+            Guardar
+          </button>
+        </div>
       </form>
     </div>
   );

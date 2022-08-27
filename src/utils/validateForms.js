@@ -35,8 +35,14 @@ export const validateFormCuentas = (values) => {
   if (!values.tipoCuenta) {
     errors.tipoCuenta = "Selecciona una opcion";
   }
-  if (!values.saldoInicial) {
-    errors.saldoInicial = "Ingresa el saldo inicial";
+  if (!values.idcuenta && (!values.saldoInicial || values.saldoInicial < 0)) {
+    errors.saldoInicial = "Ingresa el saldo inicial. Debe ser minimo 0.";
+  }
+  if (
+    values.idcuenta &&
+    (!values.saldoDisponible || values.saldoDisponible < 0)
+  ) {
+    errors.saldoDisponible = "Ingresa el saldo. Debe ser minimo 0.";
   }
   if (!values.estado) {
     errors.estado = "Selecciona una opcion";
@@ -46,9 +52,6 @@ export const validateFormCuentas = (values) => {
 
 export const validateFormMovimientos = (values) => {
   const errors = {};
-  if (!values.numeroCuenta) {
-    errors.numeroCuenta = "Ingresa el numero de cuenta!";
-  }
   if (!values.tipoMovimiento) {
     errors.tipoMovimiento = "Selecciona una opcion";
   }

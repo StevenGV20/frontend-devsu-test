@@ -20,20 +20,44 @@
 .form-group > label {
   width: 100%;
 }
-.form-error {
-  width: 100%;
-  color: red;
-  font-size: 12px;
-}
 .form-input {
   padding: 1em;
   border: 1px solid #bdbdbd;
   width: 90%;
   left: 0;
 }
-.form-input-error {
-  border: red 1px solid;
+
+.form-container-buttons {
+  grid-column: span 2 / span 2;
+  display: flex;
 }
 .form-button {
   margin: auto 3em auto 2em;
+}
+.form-container-buttons .form-button {
+  width: 100%;
+}
+
+@media (min-width: 751px) and (max-width: 1000px) {
+  .form-input {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .form-container form {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .form-input {
+    width: 100%;
+  }
+  .form-container-buttons {
+    grid-column: span 1 / span 1;
+    display: block;
+  }
+  .form-container-buttons .form-button {
+    margin: auto 3%;
+  }
+  .form-container-buttons > * + * {
+    margin-top: 0.5em;
+  }
 }

@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getClientes } from "../api/clientes";
+import { deleteCliente, getClientes } from "../api/clientes";
 import ClientesForm from "../components/form/Clientes";
 import Modal from "../components/modal";
 import Table from "../components/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCoffee,
-  faDeleteLeft,
-  faEdit,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSpinner, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./_.css";
 
 export default function Clientes() {
@@ -28,6 +23,18 @@ export default function Clientes() {
     "",
     "",
   ];
+
+  const onDelete = (id) => {
+    console.log(id);
+    deleteCliente(id)
+      .then(() => {
+        console.log("Se elimino correctamente");
+        setRefreshList((prev) => !prev);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     (async () => {
@@ -53,8 +60,12 @@ export default function Clientes() {
         />
       </Modal>
       <Table headers={header_table}>
-        {clientes.length < 0 ? (
-          <></>
+        {clientes.length < 1 ? (
+          <tr>
+            <td colSpan={header_table.length - 1}>
+              <FontAwesomeIcon icon={faSpinner} className="icon-loader" />
+            </td>
+          </tr>
         ) : (
           clientes.map((c) => (
             <tr key={c.idcliente}>
@@ -74,7 +85,7 @@ export default function Clientes() {
                 </button>
               </td>
               <td>
-                <button onClick={() => setClienteSelected(c)}>
+                <button onClick={() => onDelete(c.idpersona)}>
                   <FontAwesomeIcon
                     icon={faTrash}
                     className="table-icon-delete"
